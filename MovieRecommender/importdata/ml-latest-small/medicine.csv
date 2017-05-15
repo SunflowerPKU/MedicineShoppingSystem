@@ -1,13 +1,13 @@
-medicineId, medicineName, medicineGenre, medicinePrice, SellerName, num
-1,板蓝根,感冒发烧,32.7,白云山,500
-2,感冒灵颗粒,感冒发烧,9.9,三精,1000
-3,快客,感冒发烧,25.5,白云山,200
-4,比洛芬,感冒发烧,72.5,芬必得,500
-5,龙虎人丹,腹泻,6.5,龙虎,100
-6,肠炎宁片,腹泻,69,康恩贝,200
-7,附子理中丸,腹泻,55,同仁堂,300
-8,碧生源减肥茶,减肥,98,碧生源,1000
-9,奥利司他胶囊,减肥,139,艾丽,2000
-10,左旋肉碱,减肥,128,修正,300
-11,王通筋骨贴,跌打损伤,49.5,万通,900
-12,创可贴,跌打损伤,13.9,云南白药,1000
+medicineId, medicineName, medicineGenre, medicinePrice, sellerName, num, url
+1,板蓝根,感冒发烧,32.7,白云山,500,../static/styles/images/1.jpg
+2,感冒灵颗粒,感冒发烧,9.9,三九,100,../static/styles/images/2.jpg
+3,快客,感冒发烧,25.5,白云山,200,../static/styles/images/3.jpg
+4,布洛芬,感冒发烧,72.5,芬必得,500,../static/styles/images/4.jpg
+5,龙虎人丹,腹泻,6.5,龙虎,100,../static/styles/images/5.jpg
+6,肠炎宁片,腹泻,69,康恩贝,200,../static/styles/images/6.jpg
+7,附子理中丸,腹泻,55,同仁堂,300,../static/styles/images/7.jpg
+8,碧生源减肥茶,减肥,98,碧生源,1000,../static/styles/images/8.jpg
+9,奥利司他胶囊,减肥,139,艾丽,2000,../static/styles/images/9.jpg
+10,左旋肉碱,减肥,128,修正,300,../static/styles/images/10.jpg
+11,万通筋骨贴,跌打损伤,49.5,万通,900,../static/styles/images/11.jpg
+12,创可贴,跌打损伤,13.9,云南白药,1000,../static/styles/images/12.jpg

@@ -8,7 +8,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 <!DOCTYPE HTML>
 <html>
 <head>
-<title>Metflix</title>
+<title>movie</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="keywords" content="Minimal Responsive web template, Bootstrap Web Templates, Flat Web Templates, Android Compatible web template, 
@@ -110,12 +110,12 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
                     </li>
                    
                     <li>
-                        <a href="#" class=" hvr-bounce-to-right"><i class="fa fa-film nav_icon"></i> <span class="nav-label">Movies</span><span class="fa arrow"></span></a>
+                        <a href="#" class=" hvr-bounce-to-right"><i class="fa fa-film nav_icon"></i> <span class="nav-label">药品</span><span class="fa arrow"></span></a>
                         <ul class="nav nav-second-level">
-                            <li><a href="show_movie?genre=action" class=" hvr-bounce-to-right"> <i class="fa fa-fighter-jet nav_icon"></i>Action</a></li>
-						<li><a href="show_movie?genre=romance" class=" hvr-bounce-to-right"><i class="fa fa-heart nav_icon"></i>Romance</a></li>
-						<li><a href="show_movie?genre=comedy" class=" hvr-bounce-to-right"><i class="fa fa-smile-o nav_icon"></i>Comedy</a></li>
-						<li><a href="show_movie?genre=drama" class=" hvr-bounce-to-right"><i class="fa fa-video-camera nav_icon"></i>Drama</a></li>
+                            <li><a href="show_movie?genre=action" class=" hvr-bounce-to-right"> <i class="fa fa-fighter-jet nav_icon"></i>感冒发烧</a></li>
+						<li><a href="show_movie?genre=romance" class=" hvr-bounce-to-right"><i class="fa fa-heart nav_icon"></i>腹泻</a></li>
+						<li><a href="show_movie?genre=comedy" class=" hvr-bounce-to-right"><i class="fa fa-smile-o nav_icon"></i>减肥</a></li>
+						<li><a href="show_movie?genre=drama" class=" hvr-bounce-to-right"><i class="fa fa-video-camera nav_icon"></i>跌打损伤</a></li>
                             <li><a href="show_movie?genre=documentary" class=" hvr-bounce-to-right"><i class="fa fa-book nav_icon"></i>Documentary</a></li>
 						<li><a href="show_movie?genre=thriller" class=" hvr-bounce-to-right"><i class="fa fa-certificate nav_icon"></i>Thriller</a></li>
 						<li><a href="show_movie?genre=others" class=" hvr-bounce-to-right"><i class="fa fa-chevron-circle-down nav_icon"></i>Others</a></li>
@@ -142,11 +142,12 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 		    <div class="banner">
 		   
 				<h2>
-				<a href="index">Home</a>
+				<a href="index">主页</a>
 				<i class="fa fa-angle-right"></i>
-				<span>My Movies</span>
+				<span>药品展示</span>
 				<i class="fa fa-angle-right"></i>
-				<span>{{show_what}}</span>
+				<!--<span>{{show_what}}</span>-->
+				<span>热销药品</span>
 				</h2>
 		    </div>
 
@@ -169,8 +170,8 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 		</div>
 
 		<script>
-			var show_title = '{{show_what}}';
-
+			//var show_title = '{{show_what}}'; 
+            var show_title = '热销药品'; 
 			movie_for = document.getElementById("movie-for");
 			movie_for.innerHTML = show_title;
 
@@ -195,7 +196,8 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 				this_pic = document.createElement("IMG");
 				this_pic.className = "lazyOwl img-responsive"
 				//this_pic.setAttribute("data-src", movie_info[i]['poster']);
-				this_pic.setAttribute("src", "../static/styles/images/avt-cat.png");
+				this_pic.setAttribute("src", medicine_info[i]['url']);
+				//this_pic.setAttribute("src", "../static/styles/images/avt-cat.png");
 
 				this_movie.appendChild(this_movie_link);
 				this_movie_link.appendChild(this_pic);

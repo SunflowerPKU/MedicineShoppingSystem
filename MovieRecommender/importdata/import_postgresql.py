@@ -35,8 +35,8 @@ with open('ml-latest-small/medicine.csv', 'rb') as f:
     reader.next()  # skip header
   
     for row in reader:
-        medicineId, medicineName, medicineGenre, medicinePrice, sellerName, num = row
-        medicine.append([to_int(medicineId),to_float(medicinePrice),to_int(num),medicineName])
+        medicineId, medicineName, medicineGenre, medicinePrice, sellerName, num, url = row
+        medicine.append([to_int(medicineId),to_float(medicinePrice),to_int(num),medicineName, url])
         
         genres.add(medicineGenre)
         
@@ -49,7 +49,7 @@ with open('ml-latest-small/medicine.csv', 'rb') as f:
 engine = sqlalchemy.create_engine(conn_str)
 conn = engine.connect()
 
-conn.execute('INSERT INTO medicine VALUES (%s, %s, %s, %s)', *medicine)
+conn.execute('INSERT INTO medicine VALUES (%s, %s, %s, %s, %s)', *medicine)
 conn.execute('INSERT INTO genres VALUES (%s)', *[(genre,) for genre in list(genres)])
 conn.execute('INSERT INTO medicine_genres VALUES (%s, %s)', *medicine_genres)
 conn.execute('INSERT INTO sellers VALUES (%s)', *[(seller,) for seller in list(sellers)])

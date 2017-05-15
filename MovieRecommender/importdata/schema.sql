@@ -15,7 +15,8 @@ CREATE TABLE medicine (
   medicine_id INT PRIMARY KEY,
   price  numeric,
   num  INT,
-  name    TEXT
+  name    TEXT,
+  url TEXT
 );
 
 CREATE TABLE genres (

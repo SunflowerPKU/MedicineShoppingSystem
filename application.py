@@ -350,7 +350,7 @@ def get_medicine(cur):
     medicine_info={}
     print("cur")
     for row in cur:
-        medicine_info[row[0]]=(row[1], row[2],row[3])
+        medicine_info[row[0]]=(row[1], row[2],row[3],row[4])
         print(row)
 
     #medicine_info = {row[0]: (row[1], row[2],row[3]) for row in cur}
@@ -360,7 +360,8 @@ def get_medicine(cur):
         medicines.append({'medicine_id': key,
                        'price': str(medicine_info[key][0]),
                        'num': medicine_info[key][1],
-                       'name': medicine_info[key][2]})
+                       'name': medicine_info[key][2],
+                       'url': medicine_info[key][3]})
     return medicines
 # Main function
 if __name__ == '__main__':
