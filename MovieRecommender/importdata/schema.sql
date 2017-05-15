@@ -1,8 +1,9 @@
-DROP TABLE IF EXISTS ratings;
-DROP TABLE IF EXISTS movie_genres;
-DROP TABLE IF EXISTS genres;
-DROP TABLE IF EXISTS movies;
 DROP TABLE IF EXISTS users;
+DROP TABLE IF EXISTS medicine;
+DROP TABLE IF EXISTS genres;
+DROP TABLE IF EXISTS medicine_genres;
+DROP TABLE IF EXISTS sellers;
+DROP TABLE IF EXISTS medicine_sellers;
 
 CREATE TABLE users (
   username TEXT PRIMARY KEY,
@@ -10,25 +11,27 @@ CREATE TABLE users (
   CHECK (username SIMILAR TO '[a-zA-Z0-9_]+' AND username NOT LIKE 'movielens_%')
 );
 
-CREATE TABLE movies (
-  movie_id INT PRIMARY KEY,
-  imdb_id  INT,
-  tmdb_id  INT,
-  title    TEXT,
-  year     INT
+CREATE TABLE medicine (
+  medicine_id INT PRIMARY KEY,
+  price  numeric,
+  num  INT,
+  name    TEXT
 );
 
 CREATE TABLE genres (
-  genre TEXT PRIMARY KEY
+  genres TEXT PRIMARY KEY
 );
 
-CREATE TABLE movie_genres (
-  movie_id INT REFERENCES movies,
-  genre    TEXT REFERENCES genres
+CREATE TABLE medicine_genres (
+  medicine_id INT REFERENCES medicine,
+  genres    TEXT REFERENCES genres
 );
 
-CREATE TABLE ratings (
-  username TEXT REFERENCES users,
-  movie_id INT REFERENCES movies,
-  rating   REAL
+CREATE TABLE sellers (
+  seller_name TEXT PRIMARY KEY
+);
+
+CREATE TABLE medicine_sellers (
+  medicine_id INT REFERENCES medicine,
+  seller_name TEXT REFERENCES sellers
 );

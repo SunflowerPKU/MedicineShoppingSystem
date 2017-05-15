@@ -32,7 +32,7 @@ disp_process_pref = "===[Process]===: "
 #
 #####################################
 
-conn_str = 'postgresql://tanxin:413372@localhost:5432/test'
+conn_str = 'postgresql://tanxin:413372@localhost:5432/medicine'
 engine_url = 'https://52.87.217.221:8000/queries.json'
 #engine_url = 'https://127.0.0.1:5432/queries.json'
 #engine_url = 'https://localhost:8000/queries.json'

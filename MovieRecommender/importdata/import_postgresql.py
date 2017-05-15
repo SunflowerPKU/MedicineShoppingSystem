@@ -5,11 +5,16 @@ Import the MovieLens dataset into PostgreSQL
 import csv
 import sqlalchemy
 from secret import conn_str
-
+'''
 movies = []  # list of lists
 movie_genres = []  # list of lists
 genre_set = set()
-
+'''
+medicine = []
+medicine_genres = []
+genres = set()
+sellers = set()
+medicine_sellers = []
 
 def to_int(s):
     try:
@@ -17,41 +22,38 @@ def to_int(s):
     except:
         return None
 
+def to_float(s):
+    try:
+        return float(s)
+    except:
+        return None
 
-with open('ml-latest-small/links.csv', 'rb') as f:
+
+#medicineId, medicineName, medicineGenre, medicinePrice, SellerName, num
+with open('ml-latest-small/medicine.csv', 'rb') as f:
     reader = csv.reader(f)
     reader.next()  # skip header
+  
     for row in reader:
-        movie_id, imdb_id, tmdb_id = [to_int(_) for _ in row]
-        movies.append([movie_id, imdb_id, tmdb_id])
-
-with open('ml-latest-small/movies.csv', 'rb') as f:
-    reader = csv.reader(f)
-    reader.next()  # skip header
-    i = 0
-    for row in reader:
-        _, title, genres = row
-        try:
-            year = int(title[-5:-1])
-            title = title[:-7]
-            movies[i].append(title)
-            movies[i].append(year)
-        except:
-            movies[i].append(title)
-            movies[i].append(None)
-
-        genres = genres.split('|')
-        movie_genres.append(genres)
-        genre_set = genre_set.union(genres)
-
-        i += 1
-
+        medicineId, medicineName, medicineGenre, medicinePrice, sellerName, num = row
+        medicine.append([to_int(medicineId),to_float(medicinePrice),to_int(num),medicineName])
+        
+        genres.add(medicineGenre)
+        
+        medicine_genres.append([to_int(medicineId),medicineGenre])
+        
+        sellers.add(sellerName)
+        
+        medicine_sellers.append([to_int(medicineId),sellerName])
+   
 engine = sqlalchemy.create_engine(conn_str)
 conn = engine.connect()
 
-conn.execute('INSERT INTO movies VALUES (%s, %s, %s, %s, %s)', *movies)
-conn.execute('INSERT INTO genres VALUES (%s)', *[(genre,) for genre in list(genre_set)])
-multiparams = [(t[0][0], genre) for t in zip(movies, movie_genres) for genre in t[1]]
-conn.execute('INSERT INTO movie_genres VALUES (%s, %s)', *multiparams)
+conn.execute('INSERT INTO medicine VALUES (%s, %s, %s, %s)', *medicine)
+conn.execute('INSERT INTO genres VALUES (%s)', *[(genre,) for genre in list(genres)])
+conn.execute('INSERT INTO medicine_genres VALUES (%s, %s)', *medicine_genres)
+conn.execute('INSERT INTO sellers VALUES (%s)', *[(seller,) for seller in list(sellers)])
+conn.execute('INSERT INTO medicine_sellers VALUES (%s, %s)', *medicine_sellers)
+
 
 conn.close()
