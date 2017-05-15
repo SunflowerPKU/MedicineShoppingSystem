@@ -1,3 +1,4 @@
+#coding: utf-8
 #from gevent import monkey
 import time
 from flask import Flask, render_template, request, g, session, redirect, flash, url_for
@@ -126,12 +127,18 @@ def signin():
         user = cur.fetchone()
         if user is None:
             return render_template('signin.html')
-
-        else:
-            
+        else:            
             session['username'] = username
+
+        cur = g.conn.execute('''
+        SELECT *
+        FROM medicine
+        LIMIT %s''', 10)  
+
+        medicine_dict = get_medicine(cur)
+        print(len(medicine_dict))
         
-        return render_template('index.html', this_username = session['username'], show_what = "Top Picks", movie_info_list = '')#redirect(url_for('index'))
+        return render_template('index.html', this_username = session['username'], show_what = "Top Picks", medicine_info_list = medicine_dict)#redirect(url_for('index'))
 
     return render_template('signin.html')
 
@@ -152,7 +159,7 @@ def signup():
 
 
 
-        return render_template('index.html', this_username = session['username'], show_what = "Top Picks", movie_info_list = '')
+        return redirect(url_for('signin'))#render_template('index.html', this_username = session['username'], show_what = "Top Picks", medicine_info_list = '')
 
 
 
@@ -339,32 +346,22 @@ def profile_edit():
 
     return render_template('profile-edit.html', this_username = session['username'])
 
-def get_movie(cur):
-    movie_info = {row[0]: (row[1], row[2],row[3],row[4],row[5],row[6],row[7],row[8],row[9],row[10],row[11],row[12],row[13],row[14],row[15],row[16],row[17],row[18],row[19],row[20]) for row in cur}
-    movies = []
-    for key in movie_info:
-        movies.append({'movie_id': key,
-                       'imdb_id': movie_info[key][0],
-                       'tmdb_id': movie_info[key][1],
-                       'title': movie_info[key][2],
-                       'year': movie_info[key][3],
-                       'plot': movie_info[key][4],
-                       'rated': movie_info[key][5],
-                       'released': movie_info[key][6],
-                       'runtime': movie_info[key][7],
-                       'genre': movie_info[key][8],
-                       'director': movie_info[key][9],
-                       'writer': movie_info[key][10],
-                       'actors': movie_info[key][11],
-                       'language': movie_info[key][12],
-                       'country': movie_info[key][13],
-                       'awards': movie_info[key][14],
-                       'poster': movie_info[key][15],
-                       'metascore': movie_info[key][16],
-                       'imdbrating': movie_info[key][17],
-                       'imdbvotes': movie_info[key][18],
-                       'type': movie_info[key][19]})
-    return movies
+def get_medicine(cur):
+    medicine_info={}
+    print("cur")
+    for row in cur:
+        medicine_info[row[0]]=(row[1], row[2],row[3])
+        print(row)
+
+    #medicine_info = {row[0]: (row[1], row[2],row[3]) for row in cur}
+    medicines = []
+    print(len(medicine_info))
+    for key in medicine_info:
+        medicines.append({'medicine_id': key,
+                       'price': str(medicine_info[key][0]),
+                       'num': medicine_info[key][1],
+                       'name': medicine_info[key][2]})
+    return medicines
 # Main function
 if __name__ == '__main__':
     application.run(debug=True, host="0.0.0.0", port=5000)

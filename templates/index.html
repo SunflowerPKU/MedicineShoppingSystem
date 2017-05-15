@@ -175,11 +175,11 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 			movie_for.innerHTML = show_title;
 
 
-			var movie_info = {{movie_info_list|tojson}};
+			var medicine_info = {{medicine_info_list|tojson}};
 
 			this_container = document.getElementById("owl-demo");
 
-			for (var i = 0; i < movie_info.length; i++) {
+			for (var i = 0; i < medicine_info.length; i++) {
 				
 
 
@@ -187,14 +187,15 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 				this_movie = document.createElement("DIV");
 				this_movie.className = "item";
 				this_movie_link = document.createElement("A");
-				this_movie_link.setAttribute("href", "movie?movie_id=".concat(movie_info[i]['movie_id']));
+				this_movie_link.setAttribute("href", "movie?movie_id=".concat(medicine_info[i]['medicine_id']));
 
 				this_movie_cap = document.createElement("P");
-				this_movie_cap.innerHTML = movie_info[i]['title'];
+				this_movie_cap.innerHTML = medicine_info[i]['name'];
 
 				this_pic = document.createElement("IMG");
 				this_pic.className = "lazyOwl img-responsive"
-				this_pic.setAttribute("data-src", movie_info[i]['poster']);
+				//this_pic.setAttribute("data-src", movie_info[i]['poster']);
+				this_pic.setAttribute("src", "../static/styles/images/avt-cat.png");
 
 				this_movie.appendChild(this_movie_link);
 				this_movie_link.appendChild(this_pic);
