@@ -91,6 +91,16 @@ def index():
 # Render home page
 @application.route('/index')
 def index_():
+    cur = g.conn.execute('''
+    SELECT *
+    FROM medicine
+    LIMIT %s''', 10)  
+    medicine_dict = get_medicine(cur)
+    print(len(medicine_dict))
+    username=session['username']
+    cur1 = g.conn.execute('''SELECT account FROM users WHERE username = %s''', username)
+    cur1_account = cur1.fetchone()
+    return render_template('index.html', this_username = session['username'], this_account = cur1_account[0], show_what = "热销药品", medicine_info_list = medicine_dict)
 
 
     print("session2")
@@ -192,13 +202,14 @@ def search_movie():
 @application.route('/show_medicine')
 def show_movie():
     med_genre = request.args.get('genre')
+    print(med_genre)
     genre=[];
     medicine_info_list = []
     if med_genre == '感冒发烧':
 
         genre='%'+'感冒发烧'+'%'
 
-        cur = g.conn.execute('SELECT * FROM medicine WHERE medicine_id in (SELECT medicine_id FROM medicine_genres WHERE genres like %s AND random() < 0.01 LIMIT 20)',genre)
+        cur = g.conn.execute('SELECT * FROM medicine WHERE medicine_id in (SELECT medicine_id FROM medicine_genres WHERE genres like %s)',genre)
         
         medicine_dict = get_medicine(cur)
 
@@ -206,7 +217,7 @@ def show_movie():
 
     elif med_genre == '腹泻':
         genre='%'+'腹泻'+'%'
-        cur = g.conn.execute('SELECT * FROM medicine WHERE medicine_id in (SELECT medicine_id FROM medicine_genres WHERE genres like %s AND random() < 0.01 LIMIT 20)',genre)
+        cur = g.conn.execute('SELECT * FROM medicine WHERE medicine_id in (SELECT medicine_id FROM medicine_genres WHERE genres like %s)',genre)
         
         medicine_dict = get_medicine(cur)
 
@@ -214,20 +225,20 @@ def show_movie():
 
     elif med_genre == '减肥':
         genre='%'+'减肥'+'%'
-        cur = g.conn.execute('SELECT * FROM medicine WHERE medicine_id in (SELECT medicine_id FROM medicine_genres WHERE genres like %s AND random() < 0.01 LIMIT 20)',genre)
+        cur = g.conn.execute('SELECT * FROM medicine WHERE medicine_id in (SELECT medicine_id FROM medicine_genres WHERE genres like %s)',genre)
         
         medicine_dict = get_medicine(cur)
         show = "减肥"
 
     elif med_genre == '跌打损伤':
         genre='%'+'跌打损伤'+'%'
-        cur = g.conn.execute('SELECT * FROM medicine WHERE medicine_id in (SELECT medicine_id FROM medicine_genres WHERE genres like %s AND random() < 0.01 LIMIT 20)',genre)
+        cur = g.conn.execute('SELECT * FROM medicine WHERE medicine_id in (SELECT medicine_id FROM medicine_genres WHERE genres like %s)',genre)
         
         medicine_dict = get_medicine(cur)
         show = "跌打损伤"
 
     else:
-        cur = g.conn.execute('SELECT * FROM medicine WHERE random() < 0.01 LIMIT 20')
+        cur = g.conn.execute('SELECT * FROM medicine WHERE random() < 10 LIMIT 20')
         
         medicine_dict = get_medicine(cur)
         show = "其它"
