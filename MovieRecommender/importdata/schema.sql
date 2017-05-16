@@ -1,9 +1,10 @@
-DROP TABLE IF EXISTS users;
-DROP TABLE IF EXISTS medicine;
 DROP TABLE IF EXISTS genres;
 DROP TABLE IF EXISTS medicine_genres;
-DROP TABLE IF EXISTS sellers;
 DROP TABLE IF EXISTS medicine_sellers;
+DROP TABLE IF EXISTS medicine;
+DROP TABLE IF EXISTS sellers;
+DROP TABLE IF EXISTS users;
+
 
 CREATE TABLE users (
   username TEXT PRIMARY KEY,
