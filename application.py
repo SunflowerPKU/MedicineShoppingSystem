@@ -10,6 +10,9 @@ from elasticsearch import Elasticsearch
 import sqlalchemy
 import predictionio
 
+import sys  
+reload(sys)  
+sys.setdefaultencoding('utf8')
 #monkey.patch_all()
 application = Flask(__name__)
 application.config['SECRET_KEY'] = 'secret!'
@@ -74,17 +77,16 @@ def index():
 
         cur = g.conn.execute('''
         SELECT *
-        FROM movies
+        FROM medicine
         WHERE random() < 0.01
         LIMIT %s''', 20)  
 
-        movie_dict = get_movie(cur)
-
+        medicine_dict = get_medicine(cur)
         
-        return render_template('index.html', this_username = session['username'], show_what = "Top Picks", movie_info_list = movie_dict)
+        return render_template('index.html', this_username = session['username'], show_what = "热销药品", medicine_info_list = medicine_dict)
 
 
-    return render_template('index.html', this_username = session['username'], show_what = "Top Picks", movie_info_list = '')
+    return render_template('index.html', this_username = session['username'], show_what = "热销药品", medicine_info_list = '')
 
 # Render home page
 @application.route('/index')
@@ -104,17 +106,17 @@ def index_():
 
         cur = g.conn.execute('''
         SELECT *
-        FROM movies
+        FROM medicine
         WHERE random() < 0.01
         LIMIT %s''', 20)  
 
-        movie_dict = get_movie(cur)
+        med_dict = get_medicine(cur)
 
         
-        return render_template('index.html', this_username = session['username'], show_what = "Top Picks", movie_info_list = movie_dict)
+        return render_template('index.html', this_username = session['username'], show_what = "热销药品", medicine_info_list = movie_dict)
 
 
-    return render_template('index.html', this_username = session['username'], show_what = "Top Picks", movie_info_list = '')
+    return render_template('index.html', this_username = session['username'], show_what = "热销药品", medicine_info_list = '')
 
 @application.route('/signin', methods = ['GET', 'POST'])
 def signin():
@@ -123,6 +125,7 @@ def signin():
     if request.method == 'POST':
         username = request.form.get('user-username')
         password = request.form.get('user-password')
+
         cur = g.conn.execute('''SELECT * FROM users WHERE username = %s AND password = %s''', (username, password))
         user = cur.fetchone()
         if user is None:
@@ -137,8 +140,10 @@ def signin():
 
         medicine_dict = get_medicine(cur)
         print(len(medicine_dict))
-        
-        return render_template('index.html', this_username = session['username'], show_what = "Top Picks", medicine_info_list = medicine_dict)#redirect(url_for('index'))
+
+        cur1 = g.conn.execute('''SELECT account FROM users WHERE username = %s AND password = %s''', (username, password))
+        cur1_account = cur1.fetchone()
+        return render_template('index.html', this_username = session['username'], this_account = cur1_account[0], show_what = "热销药品", medicine_info_list = medicine_dict)#redirect(url_for('index'))
 
     return render_template('signin.html')
 
@@ -150,9 +155,11 @@ def signup():
     if request.method == 'POST':
         username = request.form.get('user-username')
         password = request.form.get('user-password')
+        account = request.form.get('user-account')
         session['username'] = username
+        session['account'] = account
         try:
-            g.conn.execute('''INSERT INTO users (username, password) VALUES (%s, %s)''', (username, password))
+            g.conn.execute('''INSERT INTO users (username, password, account) VALUES (%s, %s, %s)''', (username, password, account))
             session['username'] = username
         except Exception as e:
             return render_template('signup.html')
@@ -167,77 +174,65 @@ def signup():
 
 
 
-@application.route('/search_movie', methods = ["POST"])
+@application.route('/search_medicine', methods = ["POST"])
 def search_movie():
 
-    movie_name = request.form.get('search-box')
-    movie_name0= movie_name
-    movie_name = '%'+movie_name+'%'
-    cur = g.conn.execute('SELECT * FROM movies WHERE title like %s LIMIT 20',movie_name)
+    medicine_name = request.form.get('search-box')
+    medicine_name0= medicine_name
+    medicine_name = '%'+medicine_name+'%'
+    cur = g.conn.execute('SELECT * FROM medicine WHERE name like %s LIMIT 20',medicine_name)
 
-    movie_dict = get_movie(cur)
+    medicine_dict = get_medicine(cur)
         
-
-    return render_template('index.html', this_username = session['username'], show_what = "Search Results: "+movie_name0, movie_info_list = movie_dict)
-
+    return render_template('index.html', this_username = session['username'], show_what = "搜索结果: "+medicine_name0, medicine_info_list = medicine_dict)
 
 
 
-@application.route('/show_movie')
+
+@application.route('/show_medicine')
 def show_movie():
-    movie_genre = request.args.get('genre')
+    med_genre = request.args.get('genre')
     genre=[];
-    movie_info_list = []
-    if movie_genre == 'action':
+    medicine_info_list = []
+    if med_genre == '感冒发烧':
 
-        genre='%'+'Action'+'%'
-        cur = g.conn.execute('SELECT * FROM movies WHERE genre like %s AND random() < 0.01 LIMIT 20',genre)
-        
-        movie_dict = get_movie(cur)
+        genre='%'+'感冒发烧'+'%'
 
-        show = "Action Movies"
-    elif movie_genre == 'romance':
-        genre='%'+'Romance'+'%'
-        cur = g.conn.execute('SELECT * FROM movies WHERE genre like %s AND random() < 0.01 LIMIT 20',genre)
+        cur = g.conn.execute('SELECT * FROM medicine WHERE medicine_id in (SELECT medicine_id FROM medicine_genres WHERE genres like %s AND random() < 0.01 LIMIT 20)',genre)
         
-        movie_dict = get_movie(cur)
+        medicine_dict = get_medicine(cur)
 
-        show = "Romance Movies"
+        show = "感冒发烧"
 
-    elif movie_genre == 'documentary':
-        genre='%'+'Documentary'+'%'
-        cur = g.conn.execute('SELECT * FROM movies WHERE genre like %s AND random() < 0.01 LIMIT 20',genre)
+    elif med_genre == '腹泻':
+        genre='%'+'腹泻'+'%'
+        cur = g.conn.execute('SELECT * FROM medicine WHERE medicine_id in (SELECT medicine_id FROM medicine_genres WHERE genres like %s AND random() < 0.01 LIMIT 20)',genre)
         
-        movie_dict = get_movie(cur)
-        show = "Documentary Movies"
+        medicine_dict = get_medicine(cur)
 
-    elif movie_genre == 'comedy':
-        genre='%'+'Comedy'+'%'
-        cur = g.conn.execute('SELECT * FROM movies WHERE genre like %s AND random() < 0.01 LIMIT 20',genre)
-        
-        movie_dict = get_movie(cur)
-        show = "Comedy Movies"
+        show = "腹泻"
 
-    elif movie_genre == 'drama':
-        genre='%'+'Drama'+'%'
-        cur = g.conn.execute('SELECT * FROM movies WHERE genre like %s AND random() < 0.01  LIMIT 20',genre)
+    elif med_genre == '减肥':
+        genre='%'+'减肥'+'%'
+        cur = g.conn.execute('SELECT * FROM medicine WHERE medicine_id in (SELECT medicine_id FROM medicine_genres WHERE genres like %s AND random() < 0.01 LIMIT 20)',genre)
         
-        movie_dict = get_movie(cur)
-        show = "Drama Movies"
-    elif movie_genre == 'thriller':
-        genre='%'+'Thriller'+'%'
-        cur = g.conn.execute('SELECT * FROM movies WHERE genre like %s AND random() < 0.01 LIMIT 20',genre)
+        medicine_dict = get_medicine(cur)
+        show = "减肥"
+
+    elif med_genre == '跌打损伤':
+        genre='%'+'跌打损伤'+'%'
+        cur = g.conn.execute('SELECT * FROM medicine WHERE medicine_id in (SELECT medicine_id FROM medicine_genres WHERE genres like %s AND random() < 0.01 LIMIT 20)',genre)
         
-        movie_dict = get_movie(cur)
-        show = "Thriller Movies"
+        medicine_dict = get_medicine(cur)
+        show = "跌打损伤"
 
     else:
-        cur = g.conn.execute('SELECT * FROM movies WHERE random() < 0.01 LIMIT 20')
+        cur = g.conn.execute('SELECT * FROM medicine WHERE random() < 0.01 LIMIT 20')
         
-        movie_dict = get_movie(cur)
-        show = "Others"
+        medicine_dict = get_medicine(cur)
+        show = "其它"
 
-    return render_template('index.html', this_username = session['username'], show_what = show, movie_info_list = movie_dict)
+    return render_template('index.html', this_username = session['username'], show_what = show, medicine_info_list = medicine_dict)
 
 
 

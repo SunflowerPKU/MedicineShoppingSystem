@@ -8,7 +8,8 @@ DROP TABLE IF EXISTS medicine_sellers;
 CREATE TABLE users (
   username TEXT PRIMARY KEY,
   password TEXT,
-  CHECK (username SIMILAR TO '[a-zA-Z0-9_]+' AND username NOT LIKE 'movielens_%')
+  account numeric,
+  CHECK (username SIMILAR TO '[a-zA-Z0-9_]+' AND username NOT LIKE 'movielens_%' AND account >= 0)
 );
 
 CREATE TABLE medicine (
