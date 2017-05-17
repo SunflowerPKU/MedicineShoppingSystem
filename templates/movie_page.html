@@ -71,8 +71,8 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 
 
 
-			<form action="search_movie" name="search-box" class=" navbar-left-right" method="post" >
-              <input type="text"  value="Search Title..." name="search-box" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'Search Title...';}">
+			<form action="search_medicine" name="search-box" class=" navbar-left-right" method="post" >
+              <input type="text"  value="搜索药名..." name="search-box" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = '搜索药名...';}">
               <input type="submit" value="" name="search-box" class="fa fa-search">
             </form>
             <div class="clearfix"> </div>
@@ -109,18 +109,18 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
                 <ul class="nav" id="side-menu">
 				
                     <li>
-                        <a href="index" class=" hvr-bounce-to-right"><i class="fa fa-desktop nav_icon "></i><span class="nav-label">Just For You</span> </a>
+                        <a href="show_shoppingcart" class=" hvr-bounce-to-right"><i class="fa fa-desktop nav_icon "></i><span class="nav-label">购物车</span> </a>
                     </li>
                    
                     <li>
-                        <a href="#" class=" hvr-bounce-to-right"><i class="fa fa-film nav_icon"></i> <span class="nav-label">Movies</span><span class="fa arrow"></span></a>
+                        <a href="#" class=" hvr-bounce-to-right"><i class="fa fa-film nav_icon"></i> <span class="nav-label">药品</span><span class="fa arrow"></span></a>
                         <ul class="nav nav-second-level">
-                            <li><a href="show_movie?genre=感冒发烧" class=" hvr-bounce-to-right"> <i class="fa fa-fighter-jet nav_icon"></i>感冒发烧</a></li>
-						<li><a href="show_movie?genre=腹泻" class=" hvr-bounce-to-right"><i class="fa fa-heart nav_icon"></i>腹泻</a></li>
-						<li><a href="show_movie?genre=减肥" class=" hvr-bounce-to-right"><i class="fa fa-smile-o nav_icon"></i>减肥</a></li>
-						<li><a href="show_movie?genre=跌打损伤" class=" hvr-bounce-to-right"><i class="fa fa-video-camera nav_icon"></i>跌打损伤</a></li>
+                            <li><a href="show_medicine?genre=感冒发烧" class=" hvr-bounce-to-right"> <i class="fa fa-fighter-jet nav_icon"></i>感冒发烧</a></li>
+						<li><a href="show_medicine?genre=腹泻" class=" hvr-bounce-to-right"><i class="fa fa-heart nav_icon"></i>腹泻</a></li>
+						<li><a href="show_medicine?genre=减肥" class=" hvr-bounce-to-right"><i class="fa fa-smile-o nav_icon"></i>减肥</a></li>
+						<li><a href="show_medicine?genre=跌打损伤" class=" hvr-bounce-to-right"><i class="fa fa-video-camera nav_icon"></i>跌打损伤</a></li>
                    
-						<li><a href="show_movie?genre=其它" class=" hvr-bounce-to-right"><i class="fa fa-chevron-circle-down nav_icon"></i>其它</a></li>
+						<li><a href="show_medicine?genre=其它" class=" hvr-bounce-to-right"><i class="fa fa-chevron-circle-down nav_icon"></i>其它</a></li>
 					   </ul>
                     </li>
 					
@@ -146,7 +146,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 		    <div class="banner">
 		   
 				<h2>
-				<a href="index">Home</a>
+				<a href="index">主页</a>
 				<i class="fa fa-angle-right"></i>
 				<a id="banner-movie-genre"></a>
 				<i class="fa fa-angle-right"></i>
@@ -184,83 +184,87 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 				<link rel="stylesheet" href="../static/styles/css/graph.css">
 							
 				<div class="graph-container">
-				<p id="movie-name"></p>
-				<p id="movie-lang"></p>
-				<p id="movie-rated"></p>
-				<p id="movie-director"></p>
+				<p id="药品名称"></p>
+				<p id="药品价格"></p>
+				<p id="库存"></p>
+				<p id="厂家信息"></p>
+				<p id="药品功效"></p>
+				<!--
 				<p id="movie-released"></p>
 				<p id="movie-actors"></p>
 				<p id="movie-year"></p>
 				<p id="movie-genre"></p>
 				<p id="movie-runtime"></p>
 				<p id="movie-sum"></p>
-					<p>Your rating: </p>
+				-->
+					
+                    </br></br>
 
-						<form method="post" id="comment-form">
-						<button type="submit" class="btn btn-warning" id="btn1" name="btn_cl" onclick="clickRate(1)" value="1">1</button>
+						<form action = "add_shoppingcart" method = "POST" id="comment-form">
+
+						    <div class="form-group">
+					 
+							  <label for="comment">购买数量:(请输入小于库存数)</label>
+							  <input class="form-control" rows="5" id="comment" name="number" ></input>
+							</div>
+							</br>
+						<button type="submit" class="btn btn-warning" id="btn1" name="btn_cl" onclick="clickRate()" value="1">加入购物车</button>
+						<!--
     					<button  type="submit" class="btn btn-warning" id="btn2" name="btn_cl" onclick="clickRate(2)" value="2">2</button>
     					<button  type="submit" class="btn btn-warning" id="btn3" name="btn_cl" onclick="clickRate(3)" value="3">3</button>
     					<button  type="submit" class="btn btn-warning" id="btn4" name="btn_cl" onclick="clickRate(4)" value="4">4</button>
     					<button  type="submit" class="btn btn-warning" id="btn5" name="btn_cl" onclick="clickRate(5)" value="5">5</button>
-
-					        <div class="form-group">
-							  <label for="comment">Comment:</label>
-							  <input class="form-control" rows="5" id="comment" name="user-comment" ></input>
-							</div>
+                        -->
+					        
 						</form>
 
 
 
 						<script>
-							function clickRate(rate) {
+
+                            function clickRate() {
 
 								var btn = document.getElementsByClassName('btn btn-warning');
 								for (var i = 0; i < btn.length; i++) {
 									btn[i].style.backgroundColor = "#D95459";
 								}
-								btn[rate-1].setAttribute("value", rate);
-								btn[rate-1].style.backgroundColor = "#b30000";
-
+								//btn[0].setAttribute("value", rate);
+								btn[0].style.backgroundColor = "#b30000";
+								//获取购买数量
+                                var num=document.getElementById("comment").value;
+                                alert(num+'盒'+movie_info["name"]+'已成功加入购物车！')
 							}
 
+							var movie_info = {{this_medicine|tojson}};
 
-							var movie_info = {{this_movie|tojson}};
 							movie_poster_container = document.getElementById("movie-poster-container");
 							movie_poster = document.createElement("IMG");
 
-							movie_poster.setAttribute("src", movie_info["poster"]);
+							movie_poster.setAttribute("src", movie_info["url"]);
 							movie_poster.setAttribute("width", "260");
-							movie_poster.setAttribute("height", "400");
+							movie_poster.setAttribute("height", "350");
 							movie_poster_container.appendChild(movie_poster);
 
 							var banner_movie_name = document.getElementById("banner-movie-name");
-							banner_movie_name.innerHTML = movie_info["title"];
+							banner_movie_name.innerHTML = movie_info["name"];
 
 							var comment_form = document.getElementById("comment-form");
-							comment_form.setAttribute("action", "movie?movie_id=".concat(movie_info["movie_id"]));
+							comment_form.setAttribute("action", "add_shoppingcart?id=".concat(movie_info["medicine_id"]));
+                            
+							var movie_info_container = document.getElementById('药品名称');
+							movie_info_container.innerHTML = "药品名称: ".concat(movie_info["name"]);
+							var movie_info_container = document.getElementById('药品价格');
+							movie_info_container.innerHTML = "药品价格: ".concat(movie_info["price"]);
+							var movie_info_container = document.getElementById('库存');
+							movie_info_container.innerHTML = "库存: ".concat(movie_info["num"]);
+							var movie_info_container = document.getElementById('厂家信息');
+							movie_info_container.innerHTML = "厂家信息: ".concat(movie_info["seller"]);
+							var movie_info_container = document.getElementById('药品功效');
+							movie_info_container.innerHTML = "药品功效: ".concat(movie_info["description"]);
 
-							var movie_info_container = document.getElementById('movie-name');
-							movie_info_container.innerHTML = "Name: ".concat(movie_info["title"]);
-							var movie_info_container = document.getElementById('movie-lang');
-							movie_info_container.innerHTML = "Language: ".concat(movie_info["language"]);
-							var movie_info_container = document.getElementById('movie-sum');
-							movie_info_container.innerHTML = "Summary: ".concat(movie_info["plot"]);
-							var movie_info_container = document.getElementById('movie-rated');
-							movie_info_container.innerHTML = "Rated: ".concat(movie_info["rated"]);
-							var movie_info_container = document.getElementById('movie-director');
-							movie_info_container.innerHTML = "Director: ".concat(movie_info["director"]);
-							var movie_info_container = document.getElementById('movie-released');
-							movie_info_container.innerHTML = "Release: ".concat(movie_info["released"]);
-							var movie_info_container = document.getElementById('movie-genre');
-							movie_info_container.innerHTML = "Genre: ".concat(movie_info["genre"]);
-							var movie_info_container = document.getElementById('movie-year');
-							movie_info_container.innerHTML = "Year: ".concat(movie_info["year"]);
-							var movie_info_container = document.getElementById('movie-runtime');
-							movie_info_container.innerHTML = "Runtime: ".concat(movie_info["runtime"]);
-							var movie_info_container = document.getElementById('movie-actors');
-							movie_info_container.innerHTML = "Actors/Actresses: ".concat(movie_info["actors"]);
-
-
+							
+                            /*
+                        
 							var banner_movie_genre = document.getElementById('banner-movie-genre');
 
 							if (movie_info["genre"].indexOf("Action") > -1) {
@@ -291,17 +295,18 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 								banner_movie_genre.setAttribute("href", "show_movie?genre".concat("others"));
 								banner_movie_genre.innerHTML = "others";
 							}
-
+                            */
 
 						</script>
 						</script>
 				</div>
 
 				</div>
+				<!--
 				<div class="panel panel-default" id="comment-box">
 						  <div class="panel-heading">User Comments</div>
 				</div>
-
+      
 				<script>
 					var movie_comment = {{this_movie_comment|tojson}};
 					var comment_box = document.getElementById('comment-box');
@@ -317,6 +322,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 						comment_box.appendChild(this_comment);
 					}
 				</script>
+				-->
 			</div>
 
 	
@@ -326,7 +332,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 
 		<!---->
 		<div class="copy">
-            <p> Author: Hongyang Bai, Ling Zhong, Zitong Zhang, Qi Xin</p>
+            <p> Author: Tan Xin</p>
 	    </div>
 
 		</div>

@@ -190,7 +190,8 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 
 				this_movie_cap = document.createElement("P");
 				this_movie_cap.innerHTML = medicine_info[i]['name'];
-
+				this_movie_cap1 = document.createElement("P1");
+                this_movie_cap1.innerHTML = "数量：" + medicine_info[i]['number'];
 				this_pic = document.createElement("IMG");
 				this_pic.className = "lazyOwl img-responsive"
 				//this_pic.setAttribute("data-src", movie_info[i]['poster']);
@@ -200,6 +201,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 				this_movie.appendChild(this_movie_link);
 				this_movie_link.appendChild(this_pic);
 				this_movie_link.appendChild(this_movie_cap);
+				this_movie_link.appendChild(this_movie_cap1);
 				this_container.appendChild(this_movie);
 			}
 
@@ -238,8 +240,35 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 			<div class="clearfix"> </div>
 		</div>
 		
+		<form action = "clean_shoppingcart" method = "POST" id="clear_shoppingcart">
 
-	 
+						</br>
+						<button type="submit" class="btn btn-warning" id="btn1" name="btn_cl" onclick="click_clean()" value="1">清空购物车</button>
+
+					        
+		</form>
+
+	    
+		<form action = "pay" method = "POST" id="payment">
+
+                        </br>
+						<button type="submit" class="btn btn-warning" id="btn2" name="btn_cl" onclick="click_pay()" value="1">结算</button>
+	        
+		</form>
+		<script>
+
+                            function click_clean() {
+
+								btn1.style.backgroundColor = "#D95459";
+	                            alert(购物车已清空！)
+							
+							}
+
+							function click_pay(){
+								btn2.style.backgroundColor = "#D95459";
+	                            alert(结算成功！)
+							}
+        </script>
 		<!---->
 <div class="copy">
             <p> Author: Tan Xin</p>

@@ -1,9 +1,11 @@
-DROP TABLE IF EXISTS users;
+DROP TABLE IF EXISTS shopping_cart;
+DROP TABLE IF EXISTS medicine_genres;
+DROP TABLE IF EXISTS medicine_sellers;
 DROP TABLE IF EXISTS medicine;
 DROP TABLE IF EXISTS genres;
-DROP TABLE IF EXISTS medicine_genres;
 DROP TABLE IF EXISTS sellers;
-DROP TABLE IF EXISTS medicine_sellers;
+DROP TABLE IF EXISTS users;
+
 
 CREATE TABLE users (
   username TEXT PRIMARY KEY,
@@ -17,7 +19,8 @@ CREATE TABLE medicine (
   price  numeric,
   num  INT,
   name    TEXT,
-  url TEXT
+  url TEXT,
+  description TEXT
 );
 
 CREATE TABLE genres (
@@ -36,4 +39,10 @@ CREATE TABLE sellers (
 CREATE TABLE medicine_sellers (
   medicine_id INT REFERENCES medicine,
   seller_name TEXT REFERENCES sellers
+);
+
+CREATE TABLE shopping_cart (
+  username TEXT REFERENCES users,
+  medicine_id INT REFERENCES medicine,
+  num INT
 );

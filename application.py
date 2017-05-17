@@ -72,6 +72,8 @@ def index():
     response = requests.post(engine_url, json.dumps({'user': session['username'], 'num': 20}), verify=False)
     response = json.loads(response.text)['itemScores']
     #response=""
+    cur1 = g.conn.execute('''SELECT account FROM users WHERE username = %s''', username)
+    cur1_account = cur1.fetchone()
     print len(response)
     if len(response) == 0:
 
@@ -82,41 +84,26 @@ def index():
         LIMIT %s''', 20)  
 
         medicine_dict = get_medicine(cur)
-        
-        return render_template('index.html', this_username = session['username'], show_what = "热销药品", medicine_info_list = medicine_dict)
+        return render_template('index.html', this_username = session['username'], this_account = cur1_account[0], show_what = "热销药品", medicine_info_list = medicine_dict)
 
 
-    return render_template('index.html', this_username = session['username'], show_what = "热销药品", medicine_info_list = '')
+    return render_template('index.html', this_username = session['username'], this_account = cur1_account[0], show_what = "热销药品", medicine_info_list = '')
 
 # Render home page
 @application.route('/index')
 def index_():
 
 
-    print("session2")
-    if 'username' not in session:
-        return redirect(url_for('signin'))
-
-
-    response = requests.post(engine_url, json.dumps({'user': session['username'], 'num': 20}), verify=False)
-    response = json.loads(response.text)['itemScores']
-    print len(response)
-
-    if len(response) == 0:
-
-        cur = g.conn.execute('''
-        SELECT *
-        FROM medicine
-        WHERE random() < 0.01
-        LIMIT %s''', 20)  
-
-        med_dict = get_medicine(cur)
-
-        
-        return render_template('index.html', this_username = session['username'], show_what = "热销药品", medicine_info_list = movie_dict)
-
-
-    return render_template('index.html', this_username = session['username'], show_what = "热销药品", medicine_info_list = '')
+    cur = g.conn.execute('''
+    SELECT *
+    FROM medicine
+    LIMIT %s''', 10)
+    medicine_dict = get_medicine(cur)
+    print(len(medicine_dict))
+    username=session['username']
+    cur1 = g.conn.execute('''SELECT account FROM users WHERE username = %s''', username)
+    cur1_account = cur1.fetchone()
+    return render_template('index.html', this_username = session['username'], this_account = cur1_account[0], show_what = "热销药品", medicine_info_list = medicine_dict)
 
 @application.route('/signin', methods = ['GET', 'POST'])
 def signin():
@@ -183,8 +170,10 @@ def search_movie():
     cur = g.conn.execute('SELECT * FROM medicine WHERE name like %s LIMIT 20',medicine_name)
 
     medicine_dict = get_medicine(cur)
-        
-    return render_template('index.html', this_username = session['username'], show_what = "搜索结果: "+medicine_name0, medicine_info_list = medicine_dict)
+  
+    cur1 = g.conn.execute('SELECT account FROM users WHERE username like %s ',session['username'])
+    cur1_account = cur1.fetchone()
+    return render_template('index.html', this_username = session['username'], this_account = cur1_account[0],show_what = "搜索结果: "+medicine_name0, medicine_info_list = medicine_dict)
 
 
 
@@ -198,7 +187,7 @@ def show_movie():
 
         genre='%'+'感冒发烧'+'%'
 
-        cur = g.conn.execute('SELECT * FROM medicine WHERE medicine_id in (SELECT medicine_id FROM medicine_genres WHERE genres like %s AND random() < 0.01 LIMIT 20)',genre)
+        cur = g.conn.execute('SELECT * FROM medicine WHERE medicine_id in (SELECT medicine_id FROM medicine_genres WHERE genres like %s)',genre)
         
         medicine_dict = get_medicine(cur)
 
@@ -206,7 +195,7 @@ def show_movie():
 
     elif med_genre == '腹泻':
         genre='%'+'腹泻'+'%'
-        cur = g.conn.execute('SELECT * FROM medicine WHERE medicine_id in (SELECT medicine_id FROM medicine_genres WHERE genres like %s AND random() < 0.01 LIMIT 20)',genre)
+        cur = g.conn.execute('SELECT * FROM medicine WHERE medicine_id in (SELECT medicine_id FROM medicine_genres WHERE genres like %s)',genre)
         
         medicine_dict = get_medicine(cur)
 
@@ -214,25 +203,26 @@ def show_movie():
 
     elif med_genre == '减肥':
         genre='%'+'减肥'+'%'
-        cur = g.conn.execute('SELECT * FROM medicine WHERE medicine_id in (SELECT medicine_id FROM medicine_genres WHERE genres like %s AND random() < 0.01 LIMIT 20)',genre)
+        cur = g.conn.execute('SELECT * FROM medicine WHERE medicine_id in (SELECT medicine_id FROM medicine_genres WHERE genres like %s)',genre)
         
         medicine_dict = get_medicine(cur)
         show = "减肥"
 
     elif med_genre == '跌打损伤':
         genre='%'+'跌打损伤'+'%'
-        cur = g.conn.execute('SELECT * FROM medicine WHERE medicine_id in (SELECT medicine_id FROM medicine_genres WHERE genres like %s AND random() < 0.01 LIMIT 20)',genre)
+        cur = g.conn.execute('SELECT * FROM medicine WHERE medicine_id in (SELECT medicine_id FROM medicine_genres WHERE genres like %s)',genre)
         
         medicine_dict = get_medicine(cur)
         show = "跌打损伤"
 
     else:
-        cur = g.conn.execute('SELECT * FROM medicine WHERE random() < 0.01 LIMIT 20')
+        cur = g.conn.execute('SELECT * FROM medicine WHERE random() < 10 LIMIT 20')
         
         medicine_dict = get_medicine(cur)
         show = "其它"
-
-    return render_template('index.html', this_username = session['username'], show_what = show, medicine_info_list = medicine_dict)
+    cur1 = g.conn.execute('SELECT account FROM users WHERE username like %s ',session['username'])
+    cur1_account = cur1.fetchone()
+    return render_template('index.html', this_username = session['username'], this_account = cur1_account[0], show_what = show, medicine_info_list = medicine_dict)
 
 
 
@@ -250,10 +240,11 @@ def profile():
     print userinfo
     return render_template('profile.html', this_username = session['username'],user_info_list=userinfo)
 
-@application.route('/movie', methods = ["GET", "POST"])
+@application.route('/medicine', methods = ["GET", "POST"])
 def inbox():
 
-    movie_id = request.args.get('movie_id')
+    medicine_id = request.args.get('medicine_id')
+    """
     user_comment = []
     if request.method == 'POST':
         
@@ -287,7 +278,7 @@ def inbox():
                 user_rate = 3
                 send_rating(session['username'], movie_id, user_rate)
 
-           
+         
             
 
 
@@ -302,11 +293,21 @@ def inbox():
 
     if user_comment == "None":
         user_comment = []
-    cur = g.conn.execute('SELECT * FROM movies WHERE movie_id=%s',movie_id)
-    
-    movie_dict = get_movie(cur)[0]
+    """
 
-    return render_template('movie_page.html', this_username = session['username'], this_movie = movie_dict, this_movie_comment = user_comment)
+    cur = g.conn.execute('SELECT * FROM medicine WHERE medicine_id=%s',medicine_id)
+    cur1 = g.conn.execute('SELECT account FROM users WHERE username like %s ',session['username'])
+    cur1_account = cur1.fetchone()
+    medicine_dict = get_medicine(cur)[0]
+    
+    seller = g.conn.execute('SELECT seller_name FROM medicine_sellers WHERE medicine_id = %s ',medicine_id)
+    seller_name = seller.fetchone()
+    medicine_dict['seller'] = seller_name[0]
+
+    description = g.conn.execute('SELECT description FROM medicine WHERE medicine_id = %s ',medicine_id)
+    des = description.fetchone()
+    medicine_dict['description'] = des[0]
+    return render_template('movie_page.html', this_username = session['username'], this_account = cur1_account[0], this_medicine = medicine_dict, this_movie_comment = [])
 
 
 def send_rating(page_user, movie_id, user_rate):
@@ -358,6 +359,135 @@ def get_medicine(cur):
                        'name': medicine_info[key][2],
                        'url': medicine_info[key][3]})
     return medicines
+
+@application.route('/add_shoppingcart',methods = ["GET", "POST"])
+def add_shoppingcart():
+    medicine_id = request.args.get('id')
+    medicine_num = request.form.get('number')
+
+    g.conn.execute('INSERT INTO shopping_cart (username, medicine_id, num) VALUES (%s,%s,%s)',(session['username'],medicine_id,medicine_num))
+
+    cur = g.conn.execute('SELECT * FROM medicine WHERE medicine_id=%s',medicine_id)
+    cur1 = g.conn.execute('SELECT account FROM users WHERE username like %s ',session['username'])
+    cur1_account = cur1.fetchone()
+    medicine_dict = get_medicine(cur)[0]
+    
+    seller = g.conn.execute('SELECT seller_name FROM medicine_sellers WHERE medicine_id = %s ',medicine_id)
+    seller_name = seller.fetchone()
+    medicine_dict['seller'] = seller_name[0]
+
+    description = g.conn.execute('SELECT description FROM medicine WHERE medicine_id = %s ',medicine_id)
+    des = description.fetchone()
+    medicine_dict['description'] = des[0]
+    return render_template('movie_page.html', this_username = session['username'], this_account = cur1_account[0], this_medicine = medicine_dict, this_movie_comment = [])
+
+@application.route('/show_shoppingcart')
+def show_shoppingcart():
+    
+    medicine_info_list = []
+    
+    cur = g.conn.execute('SELECT * FROM medicine WHERE medicine_id in (SELECT medicine_id FROM (SELECT * FROM shopping_cart WHERE username like %s) AS a)',session['username'])
+         
+    medicine_dict = get_medicine(cur)
+
+    show = "我的购物车"
+
+    cur1 = g.conn.execute('SELECT account FROM users WHERE username like %s ',session['username'])
+    cur1_account = cur1.fetchone()
+
+    cur2 = g.conn.execute('SELECT medicine_id, num FROM shopping_cart where username like %s', session['username'])
+    cart_info={}
+    for row in cur2:
+        cart_info[row[0]]=(row[1])
+
+    for key in cart_info:
+        for i in range(len(medicine_dict)):
+            if medicine_dict[i]['medicine_id'] == key:
+                medicine_dict[i]['number'] = cart_info[key]
+
+
+    return render_template('shoppingcart.html', this_username = session['username'], this_account = cur1_account[0], show_what = show, medicine_info_list = medicine_dict)
+
+
+@application.route('/clean_shoppingcart',methods = ["GET", "POST"])
+def clean_shoppingcart():
+
+    g.conn.execute('''DELETE FROM shopping_cart WHERE username = %s''', session['username'])
+    
+    medicine_info_list = []
+    cur = g.conn.execute('SELECT * FROM medicine WHERE medicine_id in (SELECT medicine_id FROM (SELECT * FROM shopping_cart WHERE username like %s) AS a)',session['username'])
+         
+    medicine_dict = get_medicine(cur)
+
+    show = "我的购物车"
+
+    cur1 = g.conn.execute('SELECT account FROM users WHERE username = %s ',session['username'])
+    cur1_account = cur1.fetchone()
+
+    cur2 = g.conn.execute('SELECT medicine_id, num FROM shopping_cart where username = %s', session['username'])
+    cart_info={}
+    for row in cur2:
+        cart_info[row[0]]=(row[1])
+
+    for key in cart_info:
+        for i in range(len(medicine_dict)):
+            if medicine_dict[i]['medicine_id'] == key:
+                medicine_dict[i]['number'] = cart_info[key]
+    
+    return render_template('shoppingcart.html', this_username = session['username'], this_account = cur1_account[0], show_what = show, medicine_info_list = medicine_dict)
+
+@application.route('/pay',methods = ["GET", "POST"])
+def pay():
+    
+    med_price = {}
+    total = 0
+    cur = g.conn.execute('SELECT medicine_id, num FROM shopping_cart WHERE username = %s', session['username'])
+    cur_shoppingcart = cur.fetchall()
+    for i in range(len(cur_shoppingcart)):
+        cur_price = g.conn.execute('SELECT price FROM medicine WHERE medicine_id = %s', cur_shoppingcart[i][0])
+        cur_price = cur_price.fetchone()
+        price = cur_price[0]
+        id = cur_shoppingcart[i][0]
+        med_price[id] = price
+
+    for i in range(len(cur_shoppingcart)):
+        total += float(med_price[id])*float(cur_shoppingcart[i][1])
+
+    cur_account = g.conn.execute('SELECT account FROM users WHERE username = %s', session['username'])
+    cur_account = cur_account.fetchone()
+    user_account = float(cur_account[0])
+
+    if user_account >= total:
+
+        a = float(user_account-total)
+        g.conn.execute('UPDATE users SET account = %s WHERE username = %s', a, session['username'])
+        
+        for i in range(len(cur_shoppingcart)):
+
+            number_buy = float(cur_shoppingcart[i][1])
+            cur_number = g.conn.execute('SELECT num FROM medicine WHERE medicine_id = %s', cur_shoppingcart[i][0])
+            cur_number = cur_number.fetchone()
+            number = float(cur_number[0])
+            new_number = int(number-number_buy)
+            cur_number = g.conn.execute('UPDATE medicine SET num =  %s WHERE medicine_id = %s', new_number, cur_shoppingcart[i][0])
+
+        g.conn.execute('''DELETE FROM shopping_cart WHERE username = %s''', session['username'])
+
+    else:
+        pass
+
+
+    cur = g.conn.execute('''
+    SELECT *
+    FROM medicine
+    LIMIT %s''', 10)
+    medicine_dict = get_medicine(cur)
+    print(len(medicine_dict))
+    username=session['username']
+    cur1 = g.conn.execute('''SELECT account FROM users WHERE username = %s''', username)
+    cur1_account = cur1.fetchone()
+    return render_template('index.html', this_username = session['username'], this_account = cur1_account[0], show_what = "热销药品", medicine_info_list = medicine_dict)
+
 # Main function
 if __name__ == '__main__':
     application.run(debug=True, host="0.0.0.0", port=5000)
