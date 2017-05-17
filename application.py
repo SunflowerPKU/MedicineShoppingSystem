@@ -92,6 +92,16 @@ def index():
 # Render home page
 @application.route('/index')
 def index_():
+    cur = g.conn.execute('''
+    SELECT *
+    FROM medicine
+    LIMIT %s''', 10)  
+    medicine_dict = get_medicine(cur)
+    print(len(medicine_dict))
+    username=session['username']
+    cur1 = g.conn.execute('''SELECT account FROM users WHERE username = %s''', username)
+    cur1_account = cur1.fetchone()
+    return render_template('index.html', this_username = session['username'], this_account = cur1_account[0], show_what = "热销药品", medicine_info_list = medicine_dict)
 
 
     cur = g.conn.execute('''
@@ -181,6 +191,7 @@ def search_movie():
 @application.route('/show_medicine')
 def show_movie():
     med_genre = request.args.get('genre')
+    print(med_genre)
     genre=[];
     medicine_info_list = []
     if med_genre == '感冒发烧':
