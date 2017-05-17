@@ -1,15 +1,8 @@
-<<<<<<< HEAD
 DROP TABLE IF EXISTS shopping_cart;
 DROP TABLE IF EXISTS medicine_genres;
 DROP TABLE IF EXISTS medicine_sellers;
 DROP TABLE IF EXISTS medicine;
 DROP TABLE IF EXISTS genres;
-=======
-DROP TABLE IF EXISTS genres;
-DROP TABLE IF EXISTS medicine_genres;
-DROP TABLE IF EXISTS medicine_sellers;
-DROP TABLE IF EXISTS medicine;
->>>>>>> ee7d4834f71181cf34e21e16b7ed2d6d068543e6
 DROP TABLE IF EXISTS sellers;
 DROP TABLE IF EXISTS users;
 
